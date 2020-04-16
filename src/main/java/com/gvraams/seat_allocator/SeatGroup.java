@@ -46,15 +46,22 @@ public class SeatGroup {
       for (int col_idx = 0; col_idx < m_columns; col_idx++) {
         String type = null;
 
-        if (col_idx == 0 || col_idx == m_columns - 1) {
-          if (col_idx == 0) {
-            type = m_isFirst ? SeatTypes.WINDOW : SeatTypes.AISLE;
-          }
-          if (col_idx == m_columns - 1) {
-            type = m_isLast ? SeatTypes.WINDOW : SeatTypes.AISLE;
-          } 
+        if (m_columns == 1) {
+          type = (m_isFirst || m_isLast) ? SeatTypes.WINDOW : SeatTypes.AISLE;
         } else {
-          type = SeatTypes.MIDDLE;
+          boolean firstColumn = col_idx == 0;
+          boolean lastColumn  = col_idx == m_columns - 1;
+
+          if (firstColumn || lastColumn) {
+            if (firstColumn) {
+              type = m_isFirst ? SeatTypes.WINDOW : SeatTypes.AISLE;
+            }
+            if (lastColumn) {
+              type = m_isLast ? SeatTypes.WINDOW : SeatTypes.AISLE;
+            }
+          } else {
+            type = SeatTypes.MIDDLE;
+          }
         }
 
         Seat seat = new Seat(type, row_idx, col_idx);
@@ -69,7 +76,7 @@ public class SeatGroup {
   public String toString() {
     StringBuilder stringBuilder = new StringBuilder();
     for (List<Seat> rowOfSeats : m_rowsOfSeats) {
-      stringBuilder.append("\n    " + rowOfSeats.toString());
+      stringBuilder.append("\n  " + rowOfSeats.toString());
     }
     stringBuilder.append("\n");
     return stringBuilder.toString();
